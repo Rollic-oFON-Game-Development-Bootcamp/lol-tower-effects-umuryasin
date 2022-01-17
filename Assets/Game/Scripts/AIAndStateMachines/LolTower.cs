@@ -14,6 +14,7 @@ public enum TowerStates
 public class LolTower : MonoBehaviour
 {
     [SerializeField] private Transform towerTop;
+    [SerializeField] private FireBall fireBallPrefab;
 
     [ReadOnly] public TowerStates currentState;
 
@@ -167,6 +168,7 @@ public class LolTower : MonoBehaviour
                     currentState = TowerStates.SeekTarget;
                     continue;
                 }
+                Fire(currentTargetPlayer.transform, attackCooldown);
                 timer -= attackCooldown;
             }
 
@@ -193,4 +195,11 @@ public class LolTower : MonoBehaviour
             currentState = TowerStates.AttackEnemy;
         }
     }
+
+    public void Fire(Transform target, float duration)
+    {
+        var fireBallObject = Instantiate(fireBallPrefab, towerTop.position, Quaternion.identity);
+        fireBallObject.LockTarget(target);
+    }
+
 }

@@ -6707,6 +6707,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerTop: {fileID: 1821415976}
+  fireBallPrefab: {fileID: 7963427751022207059, guid: 86f4cef5524da3b46b7fd23f92bbc792, type: 3}
   currentState: 0
 --- !u!4 &1586113010
 Transform:
