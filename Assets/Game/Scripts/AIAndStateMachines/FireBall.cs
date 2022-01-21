@@ -6,15 +6,19 @@ using DG.Tweening;
 public class FireBall : MonoBehaviour
 {
     [SerializeField] private Transform childFireBall;
+    [SerializeField] private ParticleSystem Explosioneffect;
+
     private bool attackEnable = false;
     private Transform targetTransform;
     private float LocationUpdateTime = 0.1f;
-    private float LocationUpdateDistanceLimit = 0.5f;
+    private float LocationUpdateDistanceLimit = 1f;
     private float timer = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
+        Explosioneffect.Stop();
+
         float childNextX = (Random.value - 0.5f) * 2;
         float childNextY = (Random.value - 0.5f) * 2;
         float childNextZ = (Random.value - 0.5f) * 2;
@@ -47,7 +51,7 @@ public class FireBall : MonoBehaviour
         float squarDisttoTarget = (targetTransform.transform.position - this.transform.position).sqrMagnitude;
 
         if (squarDisttoTarget > LocationUpdateDistanceLimit)
-        {                                                                                     
+        {
             float nextX = Mathf.Lerp(targetTransform.position.x, this.transform.position.x, 0.85f);
             float nextY = Mathf.Lerp(targetTransform.position.y, this.transform.position.y, 0.85f);
             float nextZ = Mathf.Lerp(targetTransform.position.z, this.transform.position.z, 0.85f);
@@ -65,14 +69,29 @@ public class FireBall : MonoBehaviour
         {
             attackEnable = false;
             this.transform.DOMove(targetTransform.position, LocationUpdateTime)
+                .OnStart(() => Explosioneffect.Play())
                 .OnComplete(() => EndOfTargetTracking());
         }
+    }
+
+    private void WaitParticleEffect()
+    {
+        StartCoroutine(PlayParticleEffect());
+    }
+
+    private IEnumerator PlayParticleEffect()
+    {
+        //Explosioneffect.Play();
+        yield return new WaitForSeconds(1f);
+        Destroy(this.gameObject);
+        yield return null;
     }
 
     private void EndOfTargetTracking()
     {
         // do same particle effect
-        Destroy(this.gameObject);
+        WaitParticleEffect();
+        //Destroy(this.gameObject);
     }
 
 }
